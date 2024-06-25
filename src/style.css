@@ -1,0 +1,8 @@
+:root {
+  --primary-clr: rgb(243, 238, 234);
+}
+
+body {
+  min-width: 100vh;
+  background-color: var(--primary-clr);
+}
