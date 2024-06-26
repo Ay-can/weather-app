@@ -3,6 +3,8 @@ import "./style.css";
 const url =
   "http://api.weatherapi.com/v1/forecast.json?key=9502aa35a4e74be39f0170815242106&q=";
 
+const currentWeatherContainer = document.querySelector(".current-weather");
+
 async function getCityForecastJson(city) {
   try {
     const searchQuery = `q=${city}`;
@@ -33,12 +35,24 @@ form.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     let weatherModel = getCityForecastJson(input.value);
-    weatherModel.then((weather) => {
-      console.log(weather.location.name);
-      console.log(weather.location.region);
-      console.log(weather.location.country);
-      console.log(weather.current.temp_c);
-      console.log(weather.current.temp_f);
-    });
+
+    weatherModel.then((model) => displayCurrentWeatherCelsius(model));
   }
 });
+
+function displayCurrentWeatherCelsius(weatherModel) {
+  const temperatureContainer = document.createElement("div");
+  //const currentTemperatureDiv = document.querySelector("div");
+  //const minMaxTemperatureDiv = document.querySelector("div");
+
+  // fill current temp div with data
+  const currentTemperatureP = document.createElement("p");
+  const currentTemperatureStatusP = document.createElement("p");
+  currentTemperatureP.innerText = weatherModel.current.temp_c;
+  currentTemperatureStatusP.innerText = weatherModel.current.condition.text;
+
+  temperatureContainer.appendChild(currentTemperatureStatusP);
+  temperatureContainer.appendChild(currentTemperatureP);
+
+  currentWeatherContainer.appendChild(temperatureContainer);
+}
