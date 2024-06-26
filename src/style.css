@@ -20,13 +20,6 @@ body {
   color: var(--secondary-clr);
 }
 
-.search-container {
-  width: 30%;
-  height: 30%;
-  display: flex;
-  justify-content: center;
-}
-
 input {
   text-align: left;
   padding: 16px;
