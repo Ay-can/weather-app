@@ -1,8 +1,14 @@
 :root {
-  --primary-clr: rgb(243, 238, 234);
+  --primary-clr: rgb(50, 52, 55);
+  --secondary-clr: rgb(226, 183, 20);
+  --font-clr: rgb(100, 102, 105);
 }
 
 body {
-  min-width: 100vh;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
   background-color: var(--primary-clr);
+  display: flex;
+  justify-content: center;
 }
