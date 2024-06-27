@@ -1,4 +1,7 @@
 import "./style.css";
+import sun from "./sun.png";
+import wind from "./wind.png";
+import rain from "./rain.png";
 
 const url =
   "http://api.weatherapi.com/v1/forecast.json?key=9502aa35a4e74be39f0170815242106&q=&days=3&aqi=no&alerts=no";
@@ -21,16 +24,19 @@ const temperatureMinMaxContainer = document.querySelector(
   ".temperature-minmax-container"
 );
 
+const weatherAdditionalInfo = document.querySelector(
+  ".weather-additional-info"
+);
+
 form.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    weatherLocation.replaceChildren();
-    temperatureContainer.replaceChildren();
-    temperatureMinMaxContainer.replaceChildren();
     e.preventDefault();
+    clearWeatherDisplay();
     getForecastCity(input.value).then((weatherModel) => {
       updateWeatherLocation(weatherModel);
       updateTemperatureCelcius(weatherModel);
       updateMinMaxTemperatureCelcius(weatherModel);
+      updateWeatherAdditionalInfo(weatherModel);
     });
   }
 });
@@ -43,13 +49,12 @@ function updateWeatherLocation(weatherModel) {
 
   weatherLocation.appendChild(weatherCity);
   weatherLocation.appendChild(weatherCountry);
-  console.log(weatherLocation);
 }
 
 function updateTemperatureCelcius(weatherModel) {
   temperatureContainer.replaceChildren();
   const temperatureP = document.createElement("p");
-  const temperatureIcon = document.createElement("img");
+  const temperatureIcon = new Image(80, 80);
 
   temperatureP.id = "temperature";
   temperatureIcon.id = "temperature-icon";
@@ -76,4 +81,51 @@ function updateMinMaxTemperatureCelcius(weatherModel) {
   temperatureMinMaxContainer.appendChild(temperatureMaxP);
 
   temperatureContainer.appendChild(temperatureMinMaxContainer);
+}
+
+function updateWeatherAdditionalInfo(weatherModel) {
+  const uvInfoDiv = createInfoDiv("UV", weatherModel.current.uv, sun);
+  const windInfoDiv = createInfoDiv(
+    "Wind",
+    weatherModel.current.wind_kph,
+    wind,
+    "km/h"
+  );
+  const humidityInfoDiv = createInfoDiv(
+    "Humidity",
+    weatherModel.current.humidity,
+    rain,
+    "%"
+  );
+
+  weatherAdditionalInfo.appendChild(uvInfoDiv);
+  weatherAdditionalInfo.appendChild(windInfoDiv);
+  weatherAdditionalInfo.appendChild(humidityInfoDiv);
+}
+
+function createInfoDiv(infoTitle, infoValue, img, valueSuffix = "") {
+  const infoDiv = document.createElement("div");
+  const infoTitleP = document.createElement("p");
+  const infoValueP = document.createElement("p");
+  const infoLogo = new Image(45, 45);
+
+  infoDiv.classList.add("info");
+  infoLogo.classList.add("logo");
+
+  infoTitleP.innerText = infoTitle;
+  infoValueP.innerText = `${infoValue} ${valueSuffix}`;
+  infoLogo.src = img;
+
+  infoDiv.appendChild(infoLogo);
+  infoDiv.appendChild(infoTitleP);
+  infoDiv.appendChild(infoValueP);
+
+  return infoDiv;
+}
+
+function clearWeatherDisplay() {
+  weatherLocation.replaceChildren();
+  weatherAdditionalInfo.replaceChildren();
+  temperatureContainer.replaceChildren();
+  temperatureMinMaxContainer.replaceChildren();
 }

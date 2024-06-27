@@ -22,6 +22,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  box-sizing: border-box;
 }
 
 h1,
@@ -40,6 +42,7 @@ h3 {
   font-weight: 800;
   font-size: 4rem;
   margin: 0;
+  align-self: center;
 }
 
 .current-weather-container {
@@ -106,18 +109,24 @@ input:focus {
 .weather-additional-info {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .info {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--secondary-clr);
+  border-radius: 10px;
   padding: 16px;
-  border: 2px solid var(--secondary-clr);
 }
 
 .info > * {
   margin: 0;
   padding: 0;
+  flex: 1;
+  font-weight: 800;
 }
 
 .forecast-hours-container {
@@ -140,8 +149,6 @@ input:focus {
 }
 
 #temperature-icon {
-  width: 60px;
-  height: 60px;
   align-self: center;
 }
 
