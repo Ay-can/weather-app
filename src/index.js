@@ -4,6 +4,8 @@ import sun from "./sun.png";
 import wind from "./wind.png";
 import rain from "./rain.png";
 
+import { format } from "date-fns";
+
 const url =
   "http://api.weatherapi.com/v1/forecast.json?key=9502aa35a4e74be39f0170815242106&q=&days=3&aqi=no&alerts=no";
 
@@ -24,10 +26,10 @@ const temperatureContainer = document.querySelector(".temperature-container");
 const temperatureMinMaxContainer = document.querySelector(
   ".temperature-minmax-container"
 );
-
 const weatherAdditionalInfo = document.querySelector(
   ".weather-additional-info"
 );
+const forecastHoursContainer = document.querySelector(".hours");
 
 form.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
@@ -38,7 +40,7 @@ form.addEventListener("keydown", (e) => {
       updateTemperatureCelcius(weatherModel);
       updateMinMaxTemperatureCelcius(weatherModel);
       updateWeatherAdditionalInfo(weatherModel);
-      getTimes(weatherModel);
+      displayForecastHours(weatherModel);
     });
   }
 });
@@ -125,18 +127,46 @@ function createInfoDiv(infoTitle, infoValue, img, valueSuffix = "") {
   return infoDiv;
 }
 
-function getTimes(weatherModel) {
-  const lastUpdatedTime = new Date(weatherModel.location.localtime).getHours();
+function displayForecastHours(weatherModel) {
+  const forecastHours = getForecastHours(weatherModel);
+
+  forecastHours.forEach((forecast) => {
+    const hourDiv = document.createElement("div");
+    const hourIcon = new Image(45, 45);
+    const hourP = document.createElement("p");
+    const hourTemperatureP = document.createElement("p");
+
+    const formattedTime = format(new Date(forecast.time), "p");
+
+    hourDiv.classList.add("hour");
+    hourIcon.src = forecast.condition.icon;
+    hourP.innerText = formattedTime;
+    hourTemperatureP.innerText = `${forecast.temp_c}℃`;
+
+    hourDiv.appendChild(hourIcon);
+    hourDiv.appendChild(hourP);
+    hourDiv.appendChild(hourTemperatureP);
+
+    forecastHoursContainer.appendChild(hourDiv);
+  });
+}
+
+// get an array of the weather forecast up to 7 hours based on current time
+function getForecastHours(weatherModel) {
+  const currentTime = new Date(weatherModel.location.localtime).getHours();
   const availableForecastHours = weatherModel.forecast.forecastday[0].hour;
+  const forecastHours = [];
 
   for (let i = 0; i < 7; i++) {
-    console.log(availableForecastHours[(lastUpdatedTime + i) % 24]);
+    forecastHours.push(availableForecastHours[(currentTime + i) % 24]);
   }
+  return forecastHours;
 }
 
 function clearWeatherDisplay() {
   weatherLocation.replaceChildren();
   weatherAdditionalInfo.replaceChildren();
+  forecastHoursContainer.replaceChildren();
   temperatureContainer.replaceChildren();
   temperatureMinMaxContainer.replaceChildren();
 }
