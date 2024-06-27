@@ -6,7 +6,7 @@
 }
 
 body {
-  margin: 0 10rem;
+  margin: 0 450px;
   padding: 0;
   min-height: 100vh;
   background-color: var(--primary-clr);
@@ -106,7 +106,7 @@ input:focus {
 .weather-additional-info {
   display: grid;
   grid-template-rows: 40%;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
 .info {
@@ -123,8 +123,11 @@ input:focus {
 
 .forecast-hours-container {
   flex: 1;
+}
+
+.hours {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
 .temperature-content {
@@ -132,7 +135,7 @@ input:focus {
   justify-content: center;
 }
 
-.forecast-days-container {
+.days {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
 }
