@@ -1,4 +1,5 @@
 import "./style.css";
+
 import sun from "./sun.png";
 import wind from "./wind.png";
 import rain from "./rain.png";
@@ -37,6 +38,7 @@ form.addEventListener("keydown", (e) => {
       updateTemperatureCelcius(weatherModel);
       updateMinMaxTemperatureCelcius(weatherModel);
       updateWeatherAdditionalInfo(weatherModel);
+      getTimes(weatherModel);
     });
   }
 });
@@ -121,6 +123,15 @@ function createInfoDiv(infoTitle, infoValue, img, valueSuffix = "") {
   infoDiv.appendChild(infoValueP);
 
   return infoDiv;
+}
+
+function getTimes(weatherModel) {
+  const lastUpdatedTime = new Date(weatherModel.location.localtime).getHours();
+  const availableForecastHours = weatherModel.forecast.forecastday[0].hour;
+
+  for (let i = 0; i < 7; i++) {
+    console.log(availableForecastHours[(lastUpdatedTime + i) % 24]);
+  }
 }
 
 function clearWeatherDisplay() {
