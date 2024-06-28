@@ -5,6 +5,7 @@ import wind from "./wind.png";
 import rain from "./rain.png";
 
 import { format } from "date-fns";
+import { da } from "date-fns/locale";
 
 const url =
   "http://api.weatherapi.com/v1/forecast.json?key=9502aa35a4e74be39f0170815242106&q=&days=3&aqi=no&alerts=no";
@@ -41,6 +42,7 @@ form.addEventListener("keydown", (e) => {
       updateMinMaxTemperatureCelcius(weatherModel);
       updateWeatherAdditionalInfo(weatherModel);
       displayForecastHours(weatherModel);
+      displayForecastDays(weatherModel);
     });
   }
 });
@@ -163,10 +165,39 @@ function getForecastHours(weatherModel) {
   return forecastHours;
 }
 
+const forecastDaysContainer = document.querySelector(".days");
+
+function displayForecastDays(weatherModel) {
+  const forecastDays = weatherModel.forecast.forecastday;
+  console.log(forecastDays);
+
+  forecastDays.forEach((forecastDay) => {
+    const dayDiv = document.createElement("div");
+    const dayIcon = new Image(40, 40);
+    const dayDate = document.createElement("p");
+    const dayMinTemperature = document.createElement("p");
+    const dayMaxTemperature = document.createElement("p");
+
+    dayDiv.classList.add("day");
+    dayIcon.src = forecastDay.day.condition.icon;
+    dayDate.innerText = format(new Date(forecastDay.date), "PPPP");
+    dayMinTemperature.innerText = `Min: ${forecastDay.day.mintemp_c}℃`;
+    dayMaxTemperature.innerText = `Max: ${forecastDay.day.maxtemp_c}℃`;
+
+    dayDiv.appendChild(dayIcon);
+    dayDiv.appendChild(dayDate);
+    dayDiv.appendChild(dayMinTemperature);
+    dayDiv.appendChild(dayMaxTemperature);
+
+    forecastDaysContainer.appendChild(dayDiv);
+  });
+}
+
 function clearWeatherDisplay() {
   weatherLocation.replaceChildren();
   weatherAdditionalInfo.replaceChildren();
   forecastHoursContainer.replaceChildren();
+  forecastDaysContainer.replaceChildren();
   temperatureContainer.replaceChildren();
   temperatureMinMaxContainer.replaceChildren();
 }

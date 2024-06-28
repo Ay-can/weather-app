@@ -1,13 +1,15 @@
 :root {
   --primary-clr: rgb(50, 52, 55);
   --secondary-clr: rgb(226, 183, 20);
+  --blue-clr: rgb(0, 101, 116);
+  --green-clr: rgb(46, 156, 95);
   --grey-clr: rgb(100, 102, 105);
   --font-clr: rgb(255, 255, 255);
 }
 
 body {
-  margin: 0 350px;
-  padding: 0;
+  margin: 0 320px;
+  padding-bottom: 120px;
   min-height: 100vh;
   background-color: var(--primary-clr);
 
@@ -15,15 +17,15 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   color: var(--font-clr);
 
-  /*
-  display: grid;
-  grid-template-rows: 1fr 4fr 2fr 2fr;
-  */
   display: flex;
   flex-direction: column;
   gap: 16px;
 
   box-sizing: border-box;
+}
+
+body > * {
+  flex: 1;
 }
 
 h1,
@@ -32,8 +34,6 @@ h3 {
 }
 
 h2 {
-  border-bottom: 2px dashed rgb(202, 71, 84);
-  width: fit-content;
   padding: 4px 0px;
 }
 
@@ -147,10 +147,12 @@ input:focus {
 
 .hour {
   padding: 16px;
-  border: 2px dashed var(--grey-clr);
+  border: 2px dashed var(--green-clr);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-weight: 800;
 }
 
 .hour > * {
@@ -180,4 +182,16 @@ input:focus {
 .temperature-minmax-container > * {
   font-weight: 800;
   font-size: 1rem;
+}
+
+.days {
+  gap: 16px;
+}
+
+.day {
+  border: 2px dashed var(--blue-clr);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  font-weight: 800;
 }
