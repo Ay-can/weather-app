@@ -125,7 +125,6 @@ function displayForecastHoursCelcius(weatherModel) {
 
 function displayForecastDaysCelcius(weatherModel) {
   const forecastDays = weatherModel.forecast.forecastday;
-  console.log(forecastDays);
 
   forecastDays.forEach((forecastDay) => {
     const dayDiv = document.createElement("div");
