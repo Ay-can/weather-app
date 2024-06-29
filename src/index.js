@@ -5,8 +5,12 @@ import wind from "./wind.png";
 import rain from "./rain.png";
 
 import { format } from "date-fns";
-import { da } from "date-fns/locale";
 
+/*
+  Normally I would never put a hardcoded key in my code. Never trust the client afterall
+  But this is just a front-end using a public free api that has 5 mil free daily calls
+  So it is moot for this time, (env variables are goated)
+*/
 const url =
   "http://api.weatherapi.com/v1/forecast.json?key=9502aa35a4e74be39f0170815242106&q=&days=3&aqi=no&alerts=no";
 
@@ -37,17 +41,12 @@ form.addEventListener("keydown", (e) => {
     e.preventDefault();
     clearWeatherDisplay();
     getForecastCity(input.value).then((weatherModel) => {
-      updateWeatherLocation(weatherModel);
-      updateTemperatureCelcius(weatherModel);
-      updateMinMaxTemperatureCelcius(weatherModel);
-      updateWeatherAdditionalInfo(weatherModel);
-      displayForecastHours(weatherModel);
-      displayForecastDays(weatherModel);
+      displayAllWeatherItems(weatherModel);
     });
   }
 });
 
-function updateWeatherLocation(weatherModel) {
+function displayWeatherLocation(weatherModel) {
   const weatherCity = document.createElement("h1");
   const weatherCountry = document.createElement("h3");
   weatherCity.innerText = weatherModel.location.name;
@@ -57,7 +56,7 @@ function updateWeatherLocation(weatherModel) {
   weatherLocation.appendChild(weatherCountry);
 }
 
-function updateTemperatureCelcius(weatherModel) {
+function displayTemperatureCelcius(weatherModel) {
   temperatureContainer.replaceChildren();
   const temperatureP = document.createElement("p");
   const temperatureIcon = new Image(80, 80);
@@ -72,7 +71,7 @@ function updateTemperatureCelcius(weatherModel) {
   temperatureContainer.appendChild(temperatureP);
 }
 
-function updateMinMaxTemperatureCelcius(weatherModel) {
+function displayMinMaxTemperatureCelcius(weatherModel) {
   temperatureMinMaxContainer.replaceChildren();
   const temperatureMinP = document.createElement("p");
   const temperatureMaxP = document.createElement("p");
@@ -89,7 +88,7 @@ function updateMinMaxTemperatureCelcius(weatherModel) {
   temperatureContainer.appendChild(temperatureMinMaxContainer);
 }
 
-function updateWeatherAdditionalInfo(weatherModel) {
+function displayWeatherAdditionalInfo(weatherModel) {
   const uvInfoDiv = createInfoDiv("UV", weatherModel.current.uv, sun);
   const windInfoDiv = createInfoDiv(
     "Wind",
@@ -129,7 +128,7 @@ function createInfoDiv(infoTitle, infoValue, img, valueSuffix = "") {
   return infoDiv;
 }
 
-function displayForecastHours(weatherModel) {
+function displayForecastHoursCelcius(weatherModel) {
   const forecastHours = getForecastHours(weatherModel);
 
   forecastHours.forEach((forecast) => {
@@ -167,7 +166,7 @@ function getForecastHours(weatherModel) {
 
 const forecastDaysContainer = document.querySelector(".days");
 
-function displayForecastDays(weatherModel) {
+function displayForecastDaysCelcius(weatherModel) {
   const forecastDays = weatherModel.forecast.forecastday;
   console.log(forecastDays);
 
@@ -201,3 +200,16 @@ function clearWeatherDisplay() {
   temperatureContainer.replaceChildren();
   temperatureMinMaxContainer.replaceChildren();
 }
+
+function displayAllWeatherItems(weatherModel) {
+  displayWeatherLocation(weatherModel);
+  displayTemperatureCelcius(weatherModel);
+  displayMinMaxTemperatureCelcius(weatherModel);
+  displayWeatherAdditionalInfo(weatherModel);
+  displayForecastHoursCelcius(weatherModel);
+  displayForecastDaysCelcius(weatherModel);
+}
+
+getForecastCity("amsterdam").then((weatherModel) =>
+  displayAllWeatherItems(weatherModel)
+);
