@@ -74,13 +74,12 @@ function displayMinMaxTemperature(weatherModel, isCelcius) {
 
 function displayWeatherAdditionalInfo(weatherModel, isKm) {
   const windInfoSuffix = isKm ? "km/h" : "mp/h";
+  const windInfo = isKm
+    ? weatherModel.current.wind_kph
+    : weatherModel.current.wind_mph;
+
   const uvInfoDiv = createInfoDiv("UV", weatherModel.current.uv, sun);
-  const windInfoDiv = createInfoDiv(
-    "Wind",
-    weatherModel.current.wind_kph,
-    wind,
-    windInfoSuffix
-  );
+  const windInfoDiv = createInfoDiv("Wind", windInfo, wind, windInfoSuffix);
   const humidityInfoDiv = createInfoDiv(
     "Humidity",
     weatherModel.current.humidity,
