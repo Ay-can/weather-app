@@ -52,7 +52,7 @@ h2 {
 
 .current-weather-container {
   display: grid;
-  grid-template-rows: 1fr 3fr 2fr;
+  grid-template-rows: 20% 2fr 1fr;
 
   flex: 1;
 }
@@ -195,4 +195,28 @@ input:focus {
   padding: 16px;
   text-align: center;
   font-weight: 800;
+}
+
+.change-temperature-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.change-temperature-buttons > * {
+  padding: 6px 20px;
+  border: 2px dashed var(--green-clr);
+  background-color: var(--primary-clr);
+  color: var(--secondary-clr);
+}
+
+.change-temperature-buttons > *:hover {
+  cursor: pointer;
+  background-color: var(--blue-clr);
+}
+
+.change-temperature-buttons > *:active {
+  position: relative;
+  top: 4px;
 }
