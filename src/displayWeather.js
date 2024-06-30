@@ -27,7 +27,7 @@ export function displayWeatherLocation(weatherModel) {
   weatherLocation.appendChild(weatherCountry);
 }
 
-function displayTemperatureCelcius(weatherModel) {
+function displayTemperature(weatherModel, isCelcius) {
   temperatureContainer.replaceChildren();
   const temperatureP = document.createElement("p");
   const temperatureIcon = new Image(80, 80);
@@ -35,23 +35,36 @@ function displayTemperatureCelcius(weatherModel) {
   temperatureP.id = "temperature";
   temperatureIcon.id = "temperature-icon";
 
-  temperatureP.innerText = `${weatherModel.current.temp_c}℃`;
+  temperatureP.innerText = isCelcius
+    ? `${weatherModel.current.temp_c}℃`
+    : `${weatherModel.current.temp_f}℉`;
+
   temperatureIcon.src = weatherModel.current.condition.icon;
 
   temperatureContainer.appendChild(temperatureIcon);
   temperatureContainer.appendChild(temperatureP);
 }
 
-function displayMinMaxTemperatureCelcius(weatherModel) {
+function displayMinMaxTemperature(weatherModel, isCelcius) {
   temperatureMinMaxContainer.replaceChildren();
   const temperatureMinP = document.createElement("p");
   const temperatureMaxP = document.createElement("p");
 
-  let minTemp = weatherModel.forecast.forecastday[0].day.mintemp_c;
-  let maxTemp = weatherModel.forecast.forecastday[0].day.maxtemp_c;
+  let minTemp = isCelcius
+    ? weatherModel.forecast.forecastday[0].day.mintemp_c
+    : weatherModel.forecast.forecastday[0].day.mintemp_f;
 
-  temperatureMinP.innerText = `Min: ${minTemp}℃`;
-  temperatureMaxP.innerText = `Max: ${maxTemp}℃`;
+  let maxTemp = isCelcius
+    ? weatherModel.forecast.forecastday[0].day.maxtemp_c
+    : weatherModel.forecast.forecastday[0].day.maxtemp_f;
+
+  temperatureMinP.innerText = isCelcius
+    ? `Min: ${minTemp}℃`
+    : `Min: ${minTemp}℉`;
+
+  temperatureMaxP.innerText = isCelcius
+    ? `Max: ${maxTemp}℃`
+    : `Max: ${maxTemp}℉`;
 
   temperatureMinMaxContainer.appendChild(temperatureMinP);
   temperatureMinMaxContainer.appendChild(temperatureMaxP);
@@ -59,13 +72,14 @@ function displayMinMaxTemperatureCelcius(weatherModel) {
   temperatureContainer.appendChild(temperatureMinMaxContainer);
 }
 
-function displayWeatherAdditionalInfo(weatherModel) {
+function displayWeatherAdditionalInfo(weatherModel, isKm) {
+  const windInfoSuffix = isKm ? "km/h" : "mp/h";
   const uvInfoDiv = createInfoDiv("UV", weatherModel.current.uv, sun);
   const windInfoDiv = createInfoDiv(
     "Wind",
     weatherModel.current.wind_kph,
     wind,
-    "km/h"
+    windInfoSuffix
   );
   const humidityInfoDiv = createInfoDiv(
     "Humidity",
@@ -99,7 +113,7 @@ function createInfoDiv(infoTitle, infoValue, img, valueSuffix = "") {
   return infoDiv;
 }
 
-function displayForecastHoursCelcius(weatherModel) {
+function displayForecastHours(weatherModel, isCelcius) {
   const forecastHours = getForecastHours(weatherModel);
 
   forecastHours.forEach((forecast) => {
@@ -113,7 +127,9 @@ function displayForecastHoursCelcius(weatherModel) {
     hourDiv.classList.add("hour");
     hourIcon.src = forecast.condition.icon;
     hourP.innerText = formattedTime;
-    hourTemperatureP.innerText = `${forecast.temp_c}℃`;
+    hourTemperatureP.innerText = isCelcius
+      ? `${forecast.temp_c}℃`
+      : `${forecast.temp_f}℉`;
 
     hourDiv.appendChild(hourIcon);
     hourDiv.appendChild(hourP);
@@ -123,7 +139,7 @@ function displayForecastHoursCelcius(weatherModel) {
   });
 }
 
-function displayForecastDaysCelcius(weatherModel) {
+function displayForecastDays(weatherModel, isCelcius) {
   const forecastDays = weatherModel.forecast.forecastday;
 
   forecastDays.forEach((forecastDay) => {
@@ -136,8 +152,14 @@ function displayForecastDaysCelcius(weatherModel) {
     dayDiv.classList.add("day");
     dayIcon.src = forecastDay.day.condition.icon;
     dayDate.innerText = format(new Date(forecastDay.date), "PPPP");
-    dayMinTemperature.innerText = `Min: ${forecastDay.day.mintemp_c}℃`;
-    dayMaxTemperature.innerText = `Max: ${forecastDay.day.maxtemp_c}℃`;
+
+    dayMinTemperature.innerText = isCelcius
+      ? `Min: ${forecastDay.day.mintemp_c}℃`
+      : `Min: ${forecastDay.day.mintemp_f}℉`;
+
+    dayMaxTemperature.innerText = isCelcius
+      ? `Max: ${forecastDay.day.maxtemp_c}℃`
+      : `Max: ${forecastDay.day.maxtemp_f}℉`;
 
     dayDiv.appendChild(dayIcon);
     dayDiv.appendChild(dayDate);
@@ -157,11 +179,11 @@ export function clearWeatherDisplay() {
   temperatureMinMaxContainer.replaceChildren();
 }
 
-export function displayAllWeatherItems(weatherModel) {
+export function displayAllWeatherItems(weatherModel, isMetric) {
   displayWeatherLocation(weatherModel);
-  displayTemperatureCelcius(weatherModel);
-  displayMinMaxTemperatureCelcius(weatherModel);
-  displayWeatherAdditionalInfo(weatherModel);
-  displayForecastHoursCelcius(weatherModel);
-  displayForecastDaysCelcius(weatherModel);
+  displayTemperature(weatherModel, isMetric);
+  displayMinMaxTemperature(weatherModel, isMetric);
+  displayWeatherAdditionalInfo(weatherModel, isMetric);
+  displayForecastHours(weatherModel, isMetric);
+  displayForecastDays(weatherModel, isMetric);
 }
